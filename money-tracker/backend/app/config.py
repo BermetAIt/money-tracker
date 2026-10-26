@@ -13,7 +13,10 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     cookie_samesite: str = "lax"
     cors_origins: str = "http://localhost:8000,http://127.0.0.1:8000"
-    anthropic_api_key: str = ""
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"
+    groq_api_key: str = ""
+    groq_model: str = "openai/gpt-oss-20b"
     ai_daily_limit: int = 20
     log_level: str = "INFO"
 

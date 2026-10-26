@@ -22,6 +22,7 @@ let history = [];
 let currentMessages = [];
 let sending = false;
 let aiEnabled = false;
+let aiProvider = "";
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (char) => {
@@ -95,7 +96,7 @@ function render() {
     </div>`;
 
   document.getElementById("assistant-mode").textContent = aiEnabled
-    ? "ИИ подключён · данные используются только для ответа на ваш запрос"
+    ? `${aiProvider} подключён · данные используются для ответа на ваш запрос`
     : "Локальные финансовые подсказки · ИИ-ключ не подключён";
   renderMessages();
   renderSuggestions();
@@ -235,10 +236,11 @@ async function sendMessage(event) {
     currentMessages.push({ role: "assistant", content: result.assistant_message.content });
     appendMessage(messageRoot, "assistant", result.assistant_message.content);
     aiEnabled = result.ai_enabled;
+    aiProvider = result.ai_provider || "ИИ-провайдер";
     history.push(result.user_message, result.assistant_message);
     renderHistory();
     document.getElementById("assistant-mode").textContent = aiEnabled
-      ? "ИИ подключён · данные используются только для ответа на ваш запрос"
+      ? `${aiProvider} подключён · данные используются для ответа на ваш запрос`
       : "Локальные финансовые подсказки · ИИ-ключ не подключён";
   } catch (error) {
     typing.remove();
@@ -276,6 +278,7 @@ async function loadData() {
   dashboard = dashboardData;
   history = messages.messages || [];
   aiEnabled = messages.ai_enabled;
+  aiProvider = messages.ai_provider || "";
 }
 
 const me = await bootShell("ai");

@@ -18,6 +18,14 @@ router = APIRouter(prefix="/api/assistant", tags=["assistant"])
 logger = logging.getLogger(__name__)
 
 
+def configured_ai_provider() -> str | None:
+    if settings.groq_api_key:
+        return "Groq"
+    if settings.openai_api_key:
+        return "OpenAI"
+    return None
+
+
 class MessageContext(BaseModel):
     role: Literal["user", "assistant"]
     content: str = Field(min_length=1, max_length=1200)
@@ -155,13 +163,25 @@ def format_money(amount_minor: int, currency: str) -> str:
     return f"{sign}{formatted} {symbols.get(currency, '⃀')}"
 
 
-async def _anthropic_reply(
+async def _provider_reply(
     prompt: str,
     history: list[MessageContext],
     snapshot: dict,
     previous: dict,
     currency: str,
 ) -> str:
+    provider = configured_ai_provider()
+    if provider == "Groq":
+        api_key = settings.groq_api_key
+        api_url = "https://api.groq.com/openai/v1/chat/completions"
+        model = settings.groq_model
+    elif provider == "OpenAI":
+        api_key = settings.openai_api_key
+        api_url = "https://api.openai.com/v1/chat/completions"
+        model = settings.openai_model
+    else:
+        raise HTTPException(status_code=503, detail="ИИ-провайдер не настроен.")
+
     context = {
         "month": snapshot["month_label"],
         "currency": currency,
@@ -179,23 +199,27 @@ async def _anthropic_reply(
     try:
         async with httpx.AsyncClient(timeout=25) as client:
             response = await client.post(
-                "https://api.anthropic.com/v1/messages",
+                api_url,
                 headers={
-                    "x-api-key": settings.anthropic_api_key,
-                    "anthropic-version": "2023-06-01",
+                    "Authorization": f"Bearer {api_key}",
                     "content-type": "application/json",
                 },
                 json={
-                    "model": "claude-haiku-4-5-20251001",
+                    "model": model,
                     "max_tokens": 700,
-                    "system": (
-                        "Ты — финансовый помощник приложения Money Tracker. Отвечай по-русски, "
-                        "доброжелательно и конкретно. Используй только предоставленные данные; "
-                        "не выдумывай операции и не давай инвестиционных обещаний. Денежные суммы "
-                        "в контексте переданы в minor units (1/100 основной валюты). "
-                        f"Контекст финансов пользователя: {json.dumps(context, ensure_ascii=False)}"
-                    ),
                     "messages": [
+                        {
+                            "role": "system",
+                            "content": (
+                                "Ты — финансовый помощник Money Tracker. Отвечай по-русски, "
+                                "доброжелательно и конкретно. Используй только данные; "
+                                "не выдумывай операции и не давай инвестиционных обещаний. "
+                                "Денежные суммы "
+                                "в контексте переданы в minor units (1/100 основной валюты). "
+                                f"Финансовый контекст пользователя: "
+                                f"{json.dumps(context, ensure_ascii=False)}"
+                            ),
+                        },
                         *[
                             {"role": message.role, "content": message.content}
                             for message in history
@@ -206,14 +230,13 @@ async def _anthropic_reply(
             )
             response.raise_for_status()
     except httpx.HTTPError as error:
-        logger.exception("Anthropic assistant request failed")
+        logger.exception("%s assistant request failed", provider)
         raise HTTPException(
             status_code=502,
-            detail="Не удалось получить ответ ИИ-помощника. Попробуйте ещё раз позже.",
+            detail=f"Не удалось получить ответ {provider}. Проверьте ключ, модель и лимиты API.",
         ) from error
 
-    blocks = response.json().get("content", [])
-    text = "\n".join(block["text"] for block in blocks if block.get("type") == "text")
+    text = response.json().get("choices", [{}])[0].get("message", {}).get("content", "")
     if not text.strip():
         raise HTTPException(
             status_code=502,
@@ -228,12 +251,14 @@ def list_messages(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    rows = db.scalars(
-        select(ChatMessage)
-        .where(ChatMessage.user_id == user.id)
-        .order_by(ChatMessage.created_at.desc(), ChatMessage.id.desc())
-        .limit(limit)
-    ).all()
+    rows = list(
+        db.scalars(
+            select(ChatMessage)
+            .where(ChatMessage.user_id == user.id)
+            .order_by(ChatMessage.created_at.desc(), ChatMessage.id.desc())
+            .limit(limit)
+        ).all()
+    )
     rows.reverse()
     used_today = db.scalar(
         select(func.count(ChatMessage.id)).where(
@@ -247,7 +272,8 @@ def list_messages(
             {"id": row.id, "role": row.role, "content": row.content, "created_at": row.created_at}
             for row in rows
         ],
-        "ai_enabled": bool(settings.anthropic_api_key),
+        "ai_enabled": configured_ai_provider() is not None,
+        "ai_provider": configured_ai_provider(),
         "daily_limit": settings.ai_daily_limit,
         "used_today": used_today or 0,
     }
@@ -270,7 +296,7 @@ async def create_message(
     previous_date = date.fromordinal(date(today.year, today.month, 1).toordinal() - 1)
     previous = _finance_snapshot(db, user, currency, previous_date.year, previous_date.month)
 
-    if settings.anthropic_api_key:
+    if configured_ai_provider():
         used_today = db.scalar(
             select(func.count(ChatMessage.id)).where(
                 ChatMessage.user_id == user.id,
@@ -283,7 +309,7 @@ async def create_message(
                 status_code=429,
                 detail="Дневной лимит сообщений ИИ-помощнику исчерпан.",
             )
-        reply = await _anthropic_reply(prompt, payload.history, snapshot, previous, currency)
+        reply = await _provider_reply(prompt, payload.history, snapshot, previous, currency)
     else:
         reply = _local_reply(prompt, snapshot, previous, currency)
 
@@ -306,5 +332,6 @@ async def create_message(
             "content": assistant_message.content,
             "created_at": assistant_message.created_at,
         },
-        "ai_enabled": bool(settings.anthropic_api_key),
+        "ai_enabled": configured_ai_provider() is not None,
+        "ai_provider": configured_ai_provider(),
     }

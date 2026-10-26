@@ -1,5 +1,6 @@
 from datetime import date
 
+from app.routers import assistant as assistant_router
 from fastapi.testclient import TestClient
 
 from tests.conftest import register_user
@@ -104,3 +105,96 @@ def test_assistant_compares_current_and_previous_month(client: TestClient) -> No
     )
     assert response.status_code == 201
     assert "150%" in response.json()["assistant_message"]["content"]
+
+
+def test_assistant_uses_openai_when_configured(client: TestClient, monkeypatch) -> None:
+    requests = []
+    monkeypatch.setattr(assistant_router.settings, "openai_api_key", "test-key")
+
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            pass
+
+        def json(self) -> dict:
+            return {"choices": [{"message": {"content": "Ответ OpenAI"}}]}
+
+    class FakeClient:
+        def __init__(self, **_kwargs) -> None:
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_args) -> None:
+            pass
+
+        async def post(self, url: str, *, headers: dict, json: dict) -> FakeResponse:
+            requests.append({"url": url, "headers": headers, "json": json})
+            return FakeResponse()
+
+    monkeypatch.setattr(assistant_router.httpx, "AsyncClient", FakeClient)
+    tokens = register_user(client)
+    response = client.post(
+        "/api/assistant/messages",
+        headers=auth(tokens),
+        json={
+            "content": "Какой бюджет остался?",
+            "history": [{"role": "user", "content": "Привет"}],
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.json()["ai_enabled"] is True
+    assert response.json()["ai_provider"] == "OpenAI"
+    assert response.json()["assistant_message"]["content"] == "Ответ OpenAI"
+    assert len(requests) == 1
+    assert requests[0]["url"] == "https://api.openai.com/v1/chat/completions"
+    assert requests[0]["headers"]["Authorization"] == "Bearer test-key"
+    assert requests[0]["json"]["model"] == "gpt-4o-mini"
+    assert requests[0]["json"]["messages"][-2:] == [
+        {"role": "user", "content": "Привет"},
+        {"role": "user", "content": "Какой бюджет остался?"},
+    ]
+
+
+def test_assistant_uses_groq_endpoint_and_model(client: TestClient, monkeypatch) -> None:
+    requests = []
+    monkeypatch.setattr(assistant_router.settings, "groq_api_key", "test-groq-key")
+    monkeypatch.setattr(assistant_router.settings, "groq_model", "openai/gpt-oss-20b")
+
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            pass
+
+        def json(self) -> dict:
+            return {"choices": [{"message": {"content": "Ответ Groq"}}]}
+
+    class FakeClient:
+        def __init__(self, **_kwargs) -> None:
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_args) -> None:
+            pass
+
+        async def post(self, url: str, *, headers: dict, json: dict) -> FakeResponse:
+            requests.append({"url": url, "headers": headers, "json": json})
+            return FakeResponse()
+
+    monkeypatch.setattr(assistant_router.httpx, "AsyncClient", FakeClient)
+    tokens = register_user(client)
+    response = client.post(
+        "/api/assistant/messages",
+        headers=auth(tokens),
+        json={"content": "Сколько потрачено?"},
+    )
+
+    assert response.status_code == 201
+    assert response.json()["ai_enabled"] is True
+    assert response.json()["ai_provider"] == "Groq"
+    assert response.json()["assistant_message"]["content"] == "Ответ Groq"
+    assert requests[0]["url"] == "https://api.groq.com/openai/v1/chat/completions"
+    assert requests[0]["headers"]["Authorization"] == "Bearer test-groq-key"
+    assert requests[0]["json"]["model"] == "openai/gpt-oss-20b"
