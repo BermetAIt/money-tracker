@@ -8,7 +8,16 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.errors import register_error_handlers
-from app.routers import accounts, auth, budgets, categories, dashboard, health, transactions
+from app.routers import (
+    accounts,
+    assistant,
+    auth,
+    budgets,
+    categories,
+    dashboard,
+    health,
+    transactions,
+)
 
 logging.basicConfig(level=settings.log_level.upper())
 
@@ -31,6 +40,7 @@ app.include_router(accounts.router)
 app.include_router(categories.router)
 app.include_router(transactions.router)
 app.include_router(budgets.router)
+app.include_router(assistant.router)
 
 if FRONTEND_DIR.exists():
     app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
@@ -56,7 +66,9 @@ def _page(name: str) -> FileResponse:
 
 
 for path, filename in PAGES.items():
-    app.add_api_route(path, lambda filename=filename: _page(filename), methods=["GET"], include_in_schema=False)
+    app.add_api_route(
+        path, lambda filename=filename: _page(filename), methods=["GET"], include_in_schema=False
+    )
 
 
 @app.get("/{page_name}.html", include_in_schema=False)
