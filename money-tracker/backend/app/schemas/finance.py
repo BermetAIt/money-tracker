@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AccountOut(BaseModel):
@@ -12,6 +12,19 @@ class AccountOut(BaseModel):
     currency: str
     goal_amount_minor: int
     balance_minor: int = 0
+
+
+class AccountIn(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    type: str = Field(pattern="^(card|cash|deposit|savings)$")
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value: str) -> str:
+        name = value.strip()
+        if not name:
+            raise ValueError("Название счёта не может быть пустым")
+        return name
 
 
 class CategoryOut(BaseModel):
