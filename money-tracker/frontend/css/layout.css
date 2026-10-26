@@ -367,8 +367,12 @@
     z-index: 40;
   }
 
+  .sidebar.sb {
+    animation: none;
+  }
+
   .sidebar.open {
-    transform: none;
+    transform: translateX(0);
   }
 
   .backdrop.show {
@@ -385,6 +389,86 @@
 
   .page-head h1 {
     font-size: 32px;
+  }
+}
+
+@media (max-width: 760px) {
+  .main {
+    padding: 16px 14px 28px;
+  }
+
+  .topbar {
+    height: auto;
+    min-height: 40px;
+    gap: 10px;
+  }
+
+  .crumb {
+    min-width: 0;
+    gap: 5px;
+    font-size: 13px;
+  }
+
+  .top-meta {
+    flex: none;
+    gap: 8px;
+  }
+
+  .page-head {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .page-head h1 {
+    font-size: clamp(27px, 7vw, 34px);
+  }
+
+  .page-head p {
+    font-size: 14px;
+  }
+
+  .head-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .head-actions > button {
+    min-width: 0;
+    flex: 1;
+    justify-content: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .topbar > div:first-child {
+    min-width: 0;
+  }
+
+  .topbar .crumb > span:first-child {
+    display: none;
+  }
+
+  .top-meta > span {
+    display: none;
+  }
+
+  .page-head h1 {
+    font-size: 29px;
+  }
+
+  .head-actions > button {
+    gap: 6px;
+    font-size: 12px;
   }
 }
 

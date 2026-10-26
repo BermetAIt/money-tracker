@@ -1,3 +1,7 @@
+html {
+  overflow-x: hidden;
+}
+
 .auth-body {
   --auth-ink: #17152f;
   --auth-muted: #65627f;
@@ -8,7 +12,7 @@
   min-height: 100vh;
   min-height: 100svh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
   place-items: center;
   padding: 88px 20px 72px;
   background:
@@ -578,11 +582,11 @@
   }
 
   .auth-orbit {
-    width: min(95vw, 500px);
+    width: min(88vw, 330px);
   }
 
   .auth-orbit-inner {
-    width: min(72vw, 380px);
+    width: min(68vw, 255px);
   }
 
   .auth-card {
@@ -608,11 +612,6 @@
 @media (max-width: 380px) {
   .auth-card {
     padding: 22px 18px;
-  }
-
-  .auth-options {
-    align-items: flex-start;
-    flex-direction: column;
   }
 }
 

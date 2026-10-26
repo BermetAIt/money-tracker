@@ -436,13 +436,191 @@
 }
 
 @media (max-width: 1100px) {
-  .kpis,
   .mid-grid,
   .bot-grid {
     grid-template-columns: 1fr;
   }
 
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi-balance {
+    grid-column: 1 / -1;
+  }
+
   .kpi-value {
     font-size: 40px;
+  }
+}
+
+@media (max-width: 760px) {
+  .kpis,
+  .mid-grid,
+  .bot-grid {
+    gap: 14px;
+  }
+
+  .kpi,
+  .chart-card,
+  .cats-card,
+  .ops-card,
+  .budget-card {
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .kpi {
+    min-height: 156px;
+  }
+
+  .kpi-balance {
+    grid-column: auto;
+  }
+
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-value {
+    font-size: 38px;
+  }
+
+  .chart-card,
+  .ops-card,
+  .budget-card {
+    min-height: 0;
+  }
+
+  .chart-card {
+    min-height: 330px;
+  }
+
+  .ops-card,
+  .budget-card {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi,
+  .chart-card,
+  .cats-card,
+  .ops-card,
+  .budget-card {
+    padding: 17px;
+  }
+
+  .kpi {
+    min-height: 148px;
+  }
+
+  .kpi-value {
+    font-size: 34px;
+  }
+
+  .kpi-balance .kpi-foot {
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .kpi-balance .kpi-foot svg {
+    width: 58px;
+    flex: none;
+  }
+
+  .card-head h2 {
+    font-size: 16px;
+  }
+
+  .chart-card {
+    min-height: 300px;
+  }
+
+  .chart-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chart-meta .kpi-value {
+    font-size: 30px;
+  }
+
+  .chart-plot {
+    padding-left: 38px;
+  }
+
+  .axis-label {
+    left: -38px;
+    font-size: 10px;
+  }
+
+  .x-axis span:not(:first-child):not(:last-child) {
+    display: none;
+  }
+
+  .donut-row {
+    gap: 12px;
+  }
+
+  .donut {
+    width: 108px;
+    height: 108px;
+  }
+
+  .donut svg {
+    width: 108px;
+    height: 108px;
+  }
+
+  .donut-center strong {
+    font-size: 30px;
+  }
+
+  .lead-pct {
+    font-size: 28px;
+  }
+
+  .cat-row {
+    gap: 6px;
+    padding-right: 2px;
+    padding-left: 2px;
+    font-size: 12px;
+  }
+
+  .cat-row > span:nth-child(2) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cat-row > span:last-child {
+    width: 40px !important;
+    font-size: 11px !important;
+  }
+
+  .ops-head,
+  .op-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .ops-head > span:nth-child(2),
+  .ops-head > span:nth-child(3),
+  .op-row > span:nth-child(2),
+  .op-row > span:nth-child(3) {
+    display: none;
+  }
+
+  .amt {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .tip-box {
+    align-items: flex-start;
+    padding: 10px;
+    font-size: 12px;
   }
 }
