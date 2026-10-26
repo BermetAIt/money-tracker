@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f4fb">
+    <title>Вход — Money Tracker</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/auth.css?v=3">
+  </head>
+  <body class="auth-body">
+    <a class="auth-brand" href="/" aria-label="Money Tracker — главная">
+      <span class="auth-brand-mark" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path>
+          <path d="M4 7V6a2 2 0 0 1 2-2h10"></path>
+          <circle cx="16" cy="13.5" r="1.2"></circle>
+        </svg>
+      </span>
+      <span>Money Tracker</span>
+    </a>
+
+    <main class="auth-stage">
+      <div class="auth-orbit auth-orbit-outer" aria-hidden="true">
+        <span class="orbit-badge orbit-badge-upper-left orbit-badge-dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-top orbit-badge-tenge">₸</span>
+        <span class="orbit-badge orbit-badge-upper-right orbit-badge-tenge">₸</span>
+        <span class="orbit-badge orbit-badge-right">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="3"></rect><path d="M9 8h6M9 12h6"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-bottom-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V11M10 19V5M16 19v-8M22 19V8"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-bottom-right">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v8H4z"></path><path d="M7 11V8a5 5 0 0 1 10 0v3"></path></svg>
+        </span>
+      </div>
+      <div class="auth-orbit auth-orbit-inner" aria-hidden="true">
+        <span class="orbit-badge orbit-badge-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 7h12M6 11h12"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-right orbit-badge-dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M4 7V6a2 2 0 0 1 2-2h10"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>
+        </span>
+        <span class="orbit-badge orbit-badge-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v8H4z"></path><path d="M7 11V8a5 5 0 0 1 10 0v3"></path></svg>
+        </span>
+      </div>
+
+      <section class="auth-card" aria-labelledby="auth-title">
+        <nav class="auth-tabs" data-active="login" aria-label="Вход или регистрация">
+          <a class="auth-tab" href="/login" aria-current="page">Вход</a>
+          <a class="auth-tab" href="/register">Регистрация</a>
+        </nav>
+        <h1 id="auth-title">С возвращением!</h1>
+        <p class="lead">Войдите, чтобы увидеть свои финансы.</p>
+
+        <form id="login-form" class="stack" novalidate>
+          <div class="auth-field-wrap">
+            <label for="email">Электронная почта</label>
+            <input class="field" id="email" name="email" type="email" autocomplete="email" placeholder="anna@example.com" required>
+          </div>
+          <div class="auth-field-wrap">
+            <label for="password">Пароль</label>
+            <div class="auth-field-control">
+              <input class="field auth-password" id="password" name="password" type="password" autocomplete="current-password" placeholder="Введите пароль" required>
+              <button class="auth-password-toggle" type="button" data-password-toggle="password" aria-label="Показать пароль" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+              </button>
+            </div>
+          </div>
+          <label class="check" for="remember"><input id="remember" name="remember" type="checkbox" checked> Запомнить меня на этом устройстве</label>
+          <p class="auth-error" id="err" role="alert" aria-live="polite"></p>
+          <button class="auth-submit" type="submit" id="login-submit">
+            <span class="auth-submit-label">Войти</span>
+          </button>
+        </form>
+        <p class="auth-foot">Впервые здесь? <a href="/register">Создать аккаунт</a></p>
+      </section>
+    </main>
+    <p class="auth-tagline">Маленькие привычки. Большие планы.</p>
+    <script type="module" src="/js/login.js?v=4"></script>
+  </body>
+</html>

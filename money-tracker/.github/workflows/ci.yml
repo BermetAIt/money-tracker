@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: money
+          POSTGRES_PASSWORD: money
+          POSTGRES_DB: money_tracker_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U money -d money_tracker_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      SECRET_KEY: ci-secret-key-not-for-production
+      TEST_DATABASE_URL: postgresql+psycopg2://money:money@localhost:5432/money_tracker_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Lint
+        run: ruff check backend
+      - name: Tests
+        working-directory: backend
+        run: pytest -q
+      - name: Build image
+        run: docker build -t money-tracker:ci .

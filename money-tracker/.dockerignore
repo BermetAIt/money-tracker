@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+venv
+__pycache__
+.pytest_cache
+.ruff_cache
+node_modules
+e2e/test-results
+e2e/playwright-report
+.env
+*.md
+design
