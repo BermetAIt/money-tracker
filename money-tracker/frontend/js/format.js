@@ -1,4 +1,4 @@
-const SYMBOLS = { KGS: "₸", RUB: "₽", USD: "$", EUR: "€" };
+const SYMBOLS = { KGS: "⃀", RUB: "₽", USD: "$", EUR: "€" };
 const MONTHS = [
   "января",
   "февраля",
@@ -30,7 +30,7 @@ const MONTHS_NOM = [
 ];
 
 export function symbol(currency) {
-  return SYMBOLS[currency] || "₸";
+  return SYMBOLS[currency] || "⃀";
 }
 
 export function formatMoney(minor, currency = "KGS", withSymbol = true) {
