@@ -120,8 +120,7 @@ function renderStatCards() {
   const savings = income - expenses;
   const savingsRate = income ? (savings / income) * 100 : 0;
   const byDay = expensesPerDay(currentTransactions);
-  let largestDay = 0;
-  for (const value of byDay.values()) largestDay = Math.max(largestDay, value);
+  const [largestDay, largestDayAmount] = [...byDay.entries()].sort((left, right) => right[1] - left[1])[0] || [0, 0];
   const noSpendDays = Math.max(0, elapsedDays - [...byDay.keys()].filter((day) => day <= elapsedDays).length);
 
   document.getElementById("analytics-stats").innerHTML = `
@@ -138,7 +137,7 @@ function renderStatCards() {
     <article class="analytics-stat card">
       <div class="analytics-stat-label">Самый затратный день <span>${icon("cal")}</span></div>
       <strong>${largestDay ? `${largestDay} ${MONTHS[month - 1].slice(0, 3)}` : "—"}</strong>
-      <small>${largestDay ? `${formatMoney(byDay.get(largestDay), currency)} за день` : "Пока нет расходов"}</small>
+      <small>${largestDay ? `${formatMoney(largestDayAmount, currency)} за день` : "Пока нет расходов"}</small>
     </article>
     <article class="analytics-stat card">
       <div class="analytics-stat-label">Дни без трат <span>${icon("income")}</span></div>
