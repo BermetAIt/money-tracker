@@ -23,8 +23,29 @@ export async function bootShell(pageId) {
     return null;
   }
   const me = await meRes.json();
+  applyStoredAppearance(me.id);
   renderShell(pageId, me);
   return me;
+}
+
+function applyStoredAppearance(userId) {
+  try {
+    const preferences = JSON.parse(localStorage.getItem(`money-tracker-settings-${userId}`) || "{}");
+    const theme = preferences.theme || "light";
+    const isDark =
+      theme === "dark" ||
+      (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.dataset.theme = isDark ? "dark" : "light";
+    if (/^#[0-9A-Fa-f]{6}$/.test(preferences.accent_color || "")) {
+      document.documentElement.style.setProperty("--color-purple", preferences.accent_color);
+      document.documentElement.style.setProperty(
+        "--color-lavender",
+        `color-mix(in srgb, ${preferences.accent_color} 42%, white)`,
+      );
+    }
+  } catch {
+    document.documentElement.dataset.theme = "light";
+  }
 }
 
 function renderShell(pageId, me) {

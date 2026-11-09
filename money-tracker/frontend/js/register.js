@@ -61,10 +61,7 @@ form.addEventListener("input", (event) => {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (authenticated) {
-    window.location.href = "/";
-    return;
-  }
+  if (authenticated) return;
   clearError();
 
   const invalid = [];
@@ -91,10 +88,11 @@ form.addEventListener("submit", async (event) => {
     });
     setToken(data.access_token);
     authenticated = true;
-    submit.disabled = false;
+    submit.disabled = true;
     submit.classList.add("is-success");
     submit.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="auth-check" d="m5 12 4 4L19 6"></path></svg><span class="auth-submit-label">Открыть приложение</span>';
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="auth-check" d="m5 12 4 4L19 6"></path></svg><span class="auth-submit-label">Аккаунт создан</span>';
+    window.location.replace("/");
   } catch (error) {
     submit.disabled = false;
     submit.innerHTML = '<span class="auth-submit-label">Создать аккаунт</span>';

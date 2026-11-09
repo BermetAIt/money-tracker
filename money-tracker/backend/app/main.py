@@ -18,6 +18,9 @@ from app.routers import (
     health,
     transactions,
 )
+from app.routers import (
+    settings as settings_router,
+)
 
 logging.basicConfig(level=settings.log_level.upper())
 
@@ -35,6 +38,7 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(auth.router)
+app.include_router(settings_router.router)
 app.include_router(dashboard.router)
 app.include_router(accounts.router)
 app.include_router(categories.router)
@@ -62,7 +66,7 @@ PAGES = {
 
 
 def _page(name: str) -> FileResponse:
-    return FileResponse(FRONTEND_DIR / name)
+    return FileResponse(FRONTEND_DIR / name, headers={"Cache-Control": "no-cache"})
 
 
 for path, filename in PAGES.items():
@@ -75,5 +79,5 @@ for path, filename in PAGES.items():
 def html_alias(page_name: str):
     target = FRONTEND_DIR / f"{page_name}.html"
     if target.exists():
-        return FileResponse(target)
-    return FileResponse(FRONTEND_DIR / "index.html")
+        return FileResponse(target, headers={"Cache-Control": "no-cache"})
+    return FileResponse(FRONTEND_DIR / "index.html", headers={"Cache-Control": "no-cache"})

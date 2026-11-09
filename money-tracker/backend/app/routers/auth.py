@@ -1,16 +1,30 @@
 from datetime import UTC, datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
-
 from app.config import settings
 from app.database import get_db
 from app.deps import get_current_user
-from app.models import Session as AuthSession
-from app.models import User, UserSettings
-from app.schemas.auth import LoginIn, RegisterIn, TokenOut, UserOut
+from app.models import (
+    Account,
+    Budget,
+    Category,
+    ChatMessage,
+    Goal,
+    Transaction,
+    User,
+    UserSettings,
+)
+from app.models import (
+    Session as AuthSession,
+)
+from app.schemas.auth import (
+    AccountDelete,
+    LoginIn,
+    PasswordChange,
+    ProfileUpdate,
+    RegisterIn,
+    TokenOut,
+    UserOut,
+)
 from app.security import (
     REFRESH_COOKIE,
     create_access_token,
@@ -20,6 +34,10 @@ from app.security import (
     verify_password,
 )
 from app.services.onboarding import provision_user
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from sqlalchemy import delete, select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -125,7 +143,13 @@ def refresh(request: Request, response: Response, db: Session = Depends(get_db))
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Нет сеанса")
     session = db.scalar(select(AuthSession).where(AuthSession.token_hash == hash_token(raw)))
     now = datetime.now(UTC)
-    if session is None or session.expires_at < now:
+    if session is None:
+        response.delete_cookie(REFRESH_COOKIE, path="/api/auth")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Сеанс истек")
+    expires_at = session.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=UTC)
+    if expires_at < now:
         response.delete_cookie(REFRESH_COOKIE, path="/api/auth")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Сеанс истек")
     user = db.get(User, session.user_id)
@@ -156,3 +180,62 @@ def me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if user.settings is None:
         user.settings = db.get(UserSettings, user.id)
     return user_out(user)
+
+
+@router.patch("/me", response_model=UserOut)
+def update_me(
+    payload: ProfileUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if payload.name is not None:
+        user.name = payload.name
+    if payload.email is not None:
+        existing = db.scalar(select(User).where(User.email == payload.email, User.id != user.id))
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Эта почта уже зарегистрирована",
+            )
+        user.email = payload.email
+    db.commit()
+    db.refresh(user)
+    return user_out(user)
+
+
+@router.post("/password", status_code=204)
+def change_password(
+    payload: PasswordChange,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(payload.current_password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Текущий пароль указан неверно",
+        )
+    user.password_hash = hash_password(payload.new_password)
+    db.commit()
+    return Response(status_code=204)
+
+
+@router.delete("/me", status_code=204)
+def delete_me(
+    payload: AccountDelete,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(payload.password, user.password_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Пароль указан неверно")
+    if payload.confirmation.strip().lower() != user.email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Введите свою почту для подтверждения",
+        )
+
+    models = (ChatMessage, AuthSession, Budget, Goal, Transaction, Account, Category, UserSettings)
+    for model in models:
+        db.execute(delete(model).where(model.user_id == user.id))
+    db.delete(user)
+    db.commit()
+    return Response(status_code=204)
