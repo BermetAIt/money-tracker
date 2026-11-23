@@ -255,6 +255,11 @@
   height: 40px;
 }
 
+.topbar.notifications-open {
+  position: relative;
+  z-index: 100;
+}
+
 .crumb {
   display: flex;
   align-items: center;

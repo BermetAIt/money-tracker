@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatDateLong, formatMoney, symbol } from "./format.js";
 import { icon } from "./icons.js?v=2";
-import { bootShell, pageRoot } from "./layout.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=3";
 
 const ACCOUNT_TYPES = {
   card: { label: "Банковская карта", shortLabel: "Карта", icon: "acc", className: "card" },

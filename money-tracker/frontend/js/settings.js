@@ -1,6 +1,6 @@
 import { apiJson } from "./api.js";
 import { icon } from "./icons.js?v=2";
-import { bootShell, pageRoot } from "./layout.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=3";
 
 const ACCENTS = ["#6D5DFB", "#0E7A5F", "#D7424A", "#C78800"];
 const CURRENCIES = [

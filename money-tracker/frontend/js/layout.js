@@ -137,6 +137,7 @@ function setupNotifications(currency) {
   const list = document.getElementById("notification-list");
   const count = document.getElementById("notification-count");
   const badge = document.getElementById("notification-badge");
+  const topbar = toggle.closest(".topbar");
   let loading = false;
   let loadError = false;
 
@@ -196,6 +197,7 @@ function setupNotifications(currency) {
   function setOpen(open) {
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
+    topbar.classList.toggle("notifications-open", open);
     if (open && loadError) loadNotifications();
   }
 
