@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 ALLOWED_CURRENCIES = {"KGS", "RUB", "USD", "EUR"}
@@ -56,6 +58,7 @@ class UserOut(BaseModel):
     email: str
     currency: str
     initials: str
+    created_at: datetime
 
 
 class ProfileUpdate(BaseModel):

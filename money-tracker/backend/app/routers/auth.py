@@ -59,6 +59,7 @@ def user_out(user: User) -> UserOut:
         email=user.email,
         currency=currency,
         initials=_initials(user.name),
+        created_at=user.created_at,
     )
 
 

@@ -13,6 +13,7 @@ def test_register_and_me(client: TestClient) -> None:
     assert body["email"] == "anna@example.com"
     assert body["initials"] == "АК"
     assert body["currency"] == "KGS"
+    assert body["created_at"]
 
 
 def test_register_respects_remember_me(client: TestClient) -> None:
