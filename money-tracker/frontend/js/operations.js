@@ -351,6 +351,40 @@ function showError(message) {
   error.textContent = message;
 }
 
+function showBudgetWarnings(warnings) {
+  if (!warnings.length) return;
+  const page = pageRoot().querySelector(".operations-page");
+  if (!page) return;
+
+  const alert = document.createElement("section");
+  alert.className = "operations-budget-warning";
+  alert.setAttribute("role", "alert");
+  alert.setAttribute("aria-live", "assertive");
+
+  const heading = document.createElement("strong");
+  heading.textContent = "Превышен лимит бюджета";
+  alert.append(heading);
+
+  const list = document.createElement("ul");
+  for (const warning of warnings) {
+    const item = document.createElement("li");
+    const label = warning.category_name ? `«${warning.category_name}»` : "Общий бюджет";
+    item.textContent = `${label}: потрачено ${formatMoney(warning.spent_minor, currency)} из ${formatMoney(warning.limit_minor, currency)}. Превышение — ${formatMoney(warning.exceeded_minor, currency)}.`;
+    list.append(item);
+  }
+  alert.append(list);
+
+  const dismiss = document.createElement("button");
+  dismiss.className = "operations-budget-warning-dismiss";
+  dismiss.type = "button";
+  dismiss.setAttribute("aria-label", "Закрыть предупреждение о бюджете");
+  dismiss.textContent = "×";
+  dismiss.addEventListener("click", () => alert.remove());
+  alert.append(dismiss);
+
+  page.prepend(alert);
+}
+
 function csvCell(value) {
   let text = String(value ?? "");
   if (typeof value === "string" && /^[\s]*[=+\-@]/.test(text)) text = `'${text}`;
@@ -394,7 +428,7 @@ async function submitExpense(event) {
   error.textContent = "";
   submit.disabled = true;
   try {
-    await apiJson("/api/transactions", {
+    const created = await apiJson("/api/transactions", {
       method: "POST",
       body: JSON.stringify({
         account_id: Number(form.elements.account.value),
@@ -409,6 +443,7 @@ async function submitExpense(event) {
     page = 0;
     await loadData();
     renderPage();
+    showBudgetWarnings(created.budget_warnings || []);
   } catch (submitError) {
     error.textContent = submitError.message || "Не удалось сохранить расход. Попробуйте ещё раз.";
   } finally {

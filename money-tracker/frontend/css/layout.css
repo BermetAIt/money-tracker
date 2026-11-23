@@ -269,15 +269,109 @@
   justify-content: center;
 }
 
-.dot-note {
+.notification-wrap {
+  position: relative;
+}
+
+.notification-toggle[aria-expanded="true"] {
+  border-color: var(--color-purple);
+  color: var(--color-purple);
+}
+
+.notification-badge {
   position: absolute;
-  right: 9px;
-  top: 9px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--color-lavender);
-  border: 2px solid #ffffff;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0 4px;
+  border: 2px solid var(--color-bg);
+  border-radius: 999px;
+  background: #d94b55;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.notification-panel {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(440px, calc(100vh - 100px));
+  overflow: auto;
+  border: 1px solid rgba(20, 18, 43, 0.08);
+  border-radius: 18px;
+  background: var(--color-card);
+  box-shadow: 0 16px 42px rgba(20, 18, 43, 0.18);
+}
+
+.notification-panel[hidden] {
+  display: none;
+}
+
+.notification-panel-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 17px;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-card);
+  font-size: 14px;
+}
+
+.notification-panel-head span {
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.notification-list {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+}
+
+.notification-item {
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, #e6a16c 45%, var(--color-line));
+  border-radius: 13px;
+  background: color-mix(in srgb, #e6a16c 14%, var(--color-card));
+  color: var(--color-text);
+}
+
+.notification-item strong {
+  display: block;
+  font-size: 12px;
+}
+
+.notification-item p {
+  margin: 5px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.notification-item-date {
+  color: var(--color-muted);
+  font-size: 10px;
+}
+
+.notification-empty {
+  margin: 0;
+  padding: 14px 12px;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.notification-empty.is-error {
+  color: #a53636;
 }
 
 .menu-toggle {

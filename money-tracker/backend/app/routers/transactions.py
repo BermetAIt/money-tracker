@@ -1,14 +1,13 @@
 from datetime import date
 
+from app.database import get_db
+from app.deps import get_current_user
+from app.models import Account, Budget, Category, Transaction, User
+from app.schemas.finance import TransactionCreatedOut, TransactionIn, TransactionOut
+from app.services.finance import serialize_transaction, spent_in_month
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
-
-from app.database import get_db
-from app.deps import get_current_user
-from app.models import Account, Category, Transaction, User
-from app.schemas.finance import TransactionIn, TransactionOut
-from app.services.finance import serialize_transaction
 
 router = APIRouter(prefix="/api/transactions", tags=["transactions"])
 
@@ -55,7 +54,7 @@ def list_transactions(
     return [serialize_transaction(tx) for tx in db.scalars(stmt).unique()]
 
 
-@router.post("", response_model=TransactionOut, status_code=201)
+@router.post("", response_model=TransactionCreatedOut, status_code=201)
 def create_transaction(
     payload: TransactionIn,
     user: User = Depends(get_current_user),
@@ -79,7 +78,34 @@ def create_transaction(
         .options(joinedload(Transaction.category), joinedload(Transaction.account))
         .where(Transaction.id == tx.id, Transaction.user_id == user.id)
     )
-    return serialize_transaction(tx)
+    budget_warnings = []
+    if tx.type == "expense":
+        budgets = db.scalars(
+            select(Budget)
+            .options(joinedload(Budget.category))
+            .where(
+                Budget.user_id == user.id,
+                Budget.year == tx.occurred_on.year,
+                Budget.month == tx.occurred_on.month,
+                Budget.category_id.is_(None)
+                if tx.category_id is None
+                else (Budget.category_id.is_(None) | (Budget.category_id == tx.category_id)),
+            )
+        ).unique()
+        for budget in budgets:
+            spent = spent_in_month(
+                db, user.id, budget.year, budget.month, budget.category_id
+            )
+            if spent > budget.limit_minor:
+                budget_warnings.append(
+                    {
+                        "category_name": budget.category.name if budget.category else None,
+                        "limit_minor": budget.limit_minor,
+                        "spent_minor": spent,
+                        "exceeded_minor": spent - budget.limit_minor,
+                    }
+                )
+    return {**serialize_transaction(tx), "budget_warnings": budget_warnings}
 
 
 @router.delete("/{tx_id}", status_code=204)

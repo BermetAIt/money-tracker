@@ -1,8 +1,7 @@
 from datetime import date
 
-from pydantic import BaseModel
-
 from app.schemas.finance import TransactionOut
+from pydantic import BaseModel
 
 
 class TrendPoint(BaseModel):
@@ -27,6 +26,16 @@ class BudgetProgress(BaseModel):
     percent: int
     daily_allowance_minor: int
     items: list[dict]
+
+
+class BudgetNotificationOut(BaseModel):
+    budget_id: int
+    category_name: str | None
+    year: int
+    month: int
+    spent_minor: int
+    limit_minor: int
+    exceeded_minor: int
 
 
 class DashboardOut(BaseModel):

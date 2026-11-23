@@ -64,6 +64,17 @@ class TransactionOut(BaseModel):
     note: str
 
 
+class BudgetWarningOut(BaseModel):
+    category_name: str | None
+    limit_minor: int
+    spent_minor: int
+    exceeded_minor: int
+
+
+class TransactionCreatedOut(TransactionOut):
+    budget_warnings: list[BudgetWarningOut]
+
+
 class BudgetIn(BaseModel):
     category_id: int | None = None
     year: int

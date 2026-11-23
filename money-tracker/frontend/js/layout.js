@@ -1,5 +1,5 @@
-import { api, ensureSession } from "./api.js";
-import { formatDateLong } from "./format.js";
+import { api, apiJson, ensureSession } from "./api.js";
+import { formatDateLong, formatMoney } from "./format.js";
 import { icon } from "./icons.js";
 
 const NAV = [
@@ -101,7 +101,17 @@ function renderShell(pageId, me) {
           </div>
           <div class="top-meta">
             <span>${formatDateLong()}</span>
-            <button class="icon-btn btn2" type="button" aria-label="Уведомления">${icon("bell")}<span class="dot-note"></span></button>
+            <div class="notification-wrap" id="notification-wrap">
+              <button class="icon-btn btn2 notification-toggle" id="notification-toggle" type="button" aria-label="Уведомления" aria-expanded="false" aria-controls="notification-panel">
+                ${icon("bell")}<span class="notification-badge" id="notification-badge" hidden></span>
+              </button>
+              <section class="notification-panel" id="notification-panel" aria-label="Уведомления" hidden>
+                <div class="notification-panel-head"><strong>Уведомления</strong><span id="notification-count"></span></div>
+                <div class="notification-list" id="notification-list" aria-live="polite">
+                  <p class="notification-empty">Проверяем лимиты бюджета…</p>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
         <div id="page"></div>
@@ -118,6 +128,88 @@ function renderShell(pageId, me) {
     sidebar.classList.remove("open");
     backdrop.classList.remove("show");
   });
+  setupNotifications(me.currency || "KGS");
+}
+
+function setupNotifications(currency) {
+  const toggle = document.getElementById("notification-toggle");
+  const panel = document.getElementById("notification-panel");
+  const list = document.getElementById("notification-list");
+  const count = document.getElementById("notification-count");
+  const badge = document.getElementById("notification-badge");
+  let loading = false;
+  let loadError = false;
+
+  function renderNotifications(notifications) {
+    count.textContent = notifications.length
+      ? `${notifications.length} ${notifications.length === 1 ? "новое" : "активных"}`
+      : "";
+    badge.hidden = notifications.length === 0;
+    badge.textContent = notifications.length > 9 ? "9+" : String(notifications.length);
+    toggle.setAttribute(
+      "aria-label",
+      notifications.length ? `Уведомления: ${notifications.length} превышенных лимита` : "Уведомления",
+    );
+    if (!notifications.length) {
+      list.innerHTML = `<p class="notification-empty">Нет превышенных лимитов. Здесь появятся уведомления, если расходы выйдут за бюджет.</p>`;
+      return;
+    }
+
+    list.replaceChildren(
+      ...notifications.map((notification) => {
+        const item = document.createElement("article");
+        item.className = "notification-item";
+        const title = document.createElement("strong");
+        title.textContent = notification.category_name
+          ? `Превышен лимит: ${notification.category_name}`
+          : "Превышен общий бюджет";
+        const details = document.createElement("p");
+        details.textContent = `Потрачено ${formatMoney(notification.spent_minor, currency)} из ${formatMoney(notification.limit_minor, currency)}. Превышение — ${formatMoney(notification.exceeded_minor, currency)}.`;
+        const date = document.createElement("span");
+        date.className = "notification-item-date";
+        date.textContent = new Intl.DateTimeFormat("ru-RU", {
+          month: "long",
+          year: "numeric",
+        }).format(new Date(notification.year, notification.month - 1, 1));
+        item.append(title, details, date);
+        return item;
+      }),
+    );
+  }
+
+  async function loadNotifications() {
+    if (loading) return;
+    loading = true;
+    loadError = false;
+    try {
+      renderNotifications(await apiJson("/api/notifications"));
+      toggle.removeAttribute("title");
+    } catch (error) {
+      loadError = true;
+      toggle.title = error.message || "Не удалось загрузить уведомления";
+      list.innerHTML = `<p class="notification-empty is-error">Не удалось загрузить уведомления. Нажмите на колокольчик, чтобы повторить.</p>`;
+    } finally {
+      loading = false;
+    }
+  }
+
+  function setOpen(open) {
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    if (open && loadError) loadNotifications();
+  }
+
+  toggle.addEventListener("click", () => setOpen(panel.hidden));
+  document.addEventListener("click", (event) => {
+    if (!panel.hidden && !event.target.closest("#notification-wrap")) setOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  loadNotifications();
 }
 
 export function pageRoot() {
