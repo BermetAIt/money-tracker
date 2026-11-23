@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatDateLong, formatMoney, symbol } from "./format.js";
-import { icon } from "./icons.js";
-import { bootShell, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=2";
 
 const ACCOUNT_TYPES = {
   card: { label: "Банковская карта", shortLabel: "Карта", icon: "acc", className: "card" },
@@ -9,7 +9,12 @@ const ACCOUNT_TYPES = {
   deposit: { label: "Депозит", shortLabel: "Вклад", icon: "bud", className: "deposit" },
   savings: { label: "Копилка", shortLabel: "Цель", icon: "idea", className: "savings" },
 };
-const CARD_COLORS = ["#302c78", "#8e7cff", "#5d4bea", "#c9c5ec"];
+const CARD_COLORS = [
+  "var(--color-account-palette-1)",
+  "var(--color-account-palette-2)",
+  "var(--color-account-palette-3)",
+  "var(--color-account-palette-4)",
+];
 const MONTH_NAMES = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
 
 let accounts = [];

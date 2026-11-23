@@ -1,6 +1,6 @@
 import { apiJson } from "./api.js";
-import { icon } from "./icons.js";
-import { bootShell, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=2";
 
 const ACCENTS = ["#6D5DFB", "#0E7A5F", "#D7424A", "#C78800"];
 const CURRENCIES = [
@@ -42,7 +42,10 @@ function applyTheme(theme) {
 
 function applyAccent(color) {
   document.documentElement.style.setProperty("--color-purple", color);
-  document.documentElement.style.setProperty("--color-lavender", `color-mix(in srgb, ${color} 42%, white)`);
+  document.documentElement.style.setProperty(
+    "--color-lavender",
+    `color-mix(in srgb, ${color} 42%, var(--color-accent-tint-base))`,
+  );
 }
 
 function setStatus(message, isError = false) {

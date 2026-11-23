@@ -40,7 +40,13 @@ function scorePassword(value) {
   if (/\d/.test(value)) score += 1;
   if (/[^A-Za-zА-Яа-я0-9]/.test(value)) score += 1;
   const labels = ["Введите пароль", "Слабый пароль", "Средний пароль", "Хороший пароль", "Надёжный пароль"];
-  const colors = ["#e9e7f3", "#e54868", "#e9a23b", "#6d5dfb", "#087a5b"];
+  const colors = [
+    "var(--color-password-strength-empty)",
+    "var(--color-password-strength-weak)",
+    "var(--color-password-strength-medium)",
+    "var(--color-password-strength-good)",
+    "var(--color-password-strength-strong)",
+  ];
   return { score, label: labels[score], color: colors[score] };
 }
 

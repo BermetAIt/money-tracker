@@ -40,7 +40,7 @@ function applyStoredAppearance(userId) {
       document.documentElement.style.setProperty("--color-purple", preferences.accent_color);
       document.documentElement.style.setProperty(
         "--color-lavender",
-        `color-mix(in srgb, ${preferences.accent_color} 42%, white)`,
+        `color-mix(in srgb, ${preferences.accent_color} 42%, var(--color-accent-tint-base))`,
       );
     }
   } catch {
@@ -63,7 +63,7 @@ function renderShell(pageId, me) {
           <span class="brand-name">Money Tracker</span>
         </div>
         <button class="side space-btn" type="button" aria-label="Выбрать пространство: Личные финансы">
-          <span style="display:flex;align-items:center;gap:10px"><span style="width:8px;height:8px;border-radius:50%;background:#B9AEFF"></span>Личные финансы</span>
+          <span style="display:flex;align-items:center;gap:10px"><span class="space-dot"></span>Личные финансы</span>
           ${icon("swap")}
         </button>
         <div class="nav-label">ВАШИ ФИНАНСЫ</div>
@@ -86,8 +86,8 @@ function renderShell(pageId, me) {
           <span style="display:flex;align-items:center;gap:10px;text-align:left">
             <span class="avatar">${me.initials}</span>
             <span>
-              <span style="display:block;color:#ffffff;font-weight:600;font-size:14px">${me.name}</span>
-              <span style="display:block;color:rgba(255,255,255,.6);font-weight:500;font-size:12.5px">Личный аккаунт</span>
+              <span class="profile-name">${me.name}</span>
+              <span class="profile-caption">Личный аккаунт</span>
             </span>
           </span>
           ${icon("chev")}

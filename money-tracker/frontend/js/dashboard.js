@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatCompact, formatDayShort, formatMoney, monthTitle, symbol } from "./format.js";
-import { icon } from "./icons.js";
-import { bootShell, emptyState, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, emptyState, pageRoot } from "./layout.js?v=2";
 
 const ICON_MAP = { bag: "bag", cafe: "cafe", car: "car", loop: "loop", home: "house", income: "income" };
 
@@ -75,13 +75,13 @@ function renderDashboard(data) {
       </div>
       <div class="kpis">
         <section class="card kpi kpi-balance rise" style="--i:2">
-          <div class="drift" style="position:absolute;right:-50px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.35);filter:blur(30px)"></div>
-          <div class="sweep" style="position:absolute;left:0;top:0;bottom:0;width:90px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));pointer-events:none"></div>
+          <div class="drift" style="position:absolute;right:-50px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--color-highlight-glow);filter:blur(30px)"></div>
+          <div class="sweep" style="position:absolute;left:0;top:0;bottom:0;width:90px;background:linear-gradient(90deg,transparent,var(--color-highlight-sweep),transparent);pointer-events:none"></div>
           <div class="kpi-label" style="position:relative"><span>Общий баланс</span><span class="kpi-ico">${icon("wallet")}</span></div>
           <div class="kpi-value" style="position:relative">${moneyHtml(data.balance_minor, cur)}</div>
           <div class="kpi-foot" style="position:relative">
             <span>На начало месяца: ${formatMoney(data.month_start_balance_minor, cur)}</span>
-            <svg width="84" height="34" viewBox="0 0 84 34" fill="none" aria-hidden="true"><path class="cline" pathLength="1" d="M2 30 C 14 28 18 20 28 22 S 44 24 52 14 S 70 8 82 4" stroke="#14122B" stroke-width="2.4" stroke-linecap="round"></path></svg>
+            <svg width="84" height="34" viewBox="0 0 84 34" fill="none" aria-hidden="true"><path class="cline" pathLength="1" d="M2 30 C 14 28 18 20 28 22 S 44 24 52 14 S 70 8 82 4" stroke="var(--color-text)" stroke-width="2.4" stroke-linecap="round"></path></svg>
           </div>
         </section>
         <section class="card kpi rise" style="--i:3">
@@ -120,15 +120,15 @@ function renderDashboard(data) {
               <span class="axis-label" style="top:52.38%">${Math.round((maxLabel || 60) / 2)} тыс.</span>
               <span class="axis-label" style="top:95.24%">0</span>
               <svg viewBox="0 0 640 210" fill="none" aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible">
-                <defs><linearGradient id="fa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9AEFF" stop-opacity=".75"></stop><stop offset="1" stop-color="#B9AEFF" stop-opacity="0"></stop></linearGradient></defs>
+                <defs><linearGradient id="fa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--color-lavender)" stop-opacity=".75"></stop><stop offset="1" stop-color="var(--color-lavender)" stop-opacity="0"></stop></linearGradient></defs>
                 <path class="carea" d="${path.area}" fill="url(#fa)"></path>
-                <path class="cline" pathLength="1" d="${path.line}" stroke="#4B3FD6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path class="cline" pathLength="1" d="${path.line}" stroke="var(--color-purple-line)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
               ${
                 trend.length
-                  ? `<span class="cring" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;width:12px;height:12px;border-radius:50%;background:#4B3FD6"></span>
-                     <span class="cdot" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;width:12px;height:12px;border-radius:50%;background:#4B3FD6;border:3px solid #ffffff;box-sizing:border-box;box-shadow:0 2px 6px rgba(20,18,43,.25)"></span>
-                     <span class="ctip" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;padding:6px 12px;border-radius:12px;background:#14122B;color:#ffffff;font-size:13px;font-weight:600;white-space:nowrap">${formatMoney(data.expense_minor, cur)}</span>`
+                  ? `<span class="cring" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;width:12px;height:12px;border-radius:50%;background:var(--color-purple-line)"></span>
+                     <span class="cdot" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;width:12px;height:12px;border-radius:50%;background:var(--color-purple-line);border:3px solid var(--color-card);box-sizing:border-box;box-shadow:0 2px 6px color-mix(in srgb, var(--color-shadow) 25%, transparent)"></span>
+                     <span class="ctip" style="position:absolute;left:${(path.last.x / 640) * 100}%;top:${(path.last.y / 210) * 100}%;padding:6px 12px;border-radius:12px;background:var(--color-sidebar);color:var(--color-on-inverse);font-size:13px;font-weight:600;white-space:nowrap">${formatMoney(data.expense_minor, cur)}</span>`
                   : ""
               }
             </div>
@@ -142,7 +142,7 @@ function renderDashboard(data) {
               ? `<div class="donut-row">
                   <div class="donut">
                     <svg width="132" height="132" viewBox="0 0 160 160" fill="none" aria-hidden="true" style="transform:rotate(-90deg)">
-                      <circle cx="80" cy="80" r="60" stroke="#EEECFA" stroke-width="22"></circle>
+                      <circle cx="80" cy="80" r="60" stroke="var(--color-track)" stroke-width="22"></circle>
                       ${donut(data.categories)}
                     </svg>
                     <div class="donut-center"><strong>${data.category_count}</strong><span>категорий</span></div>
@@ -155,7 +155,7 @@ function renderDashboard(data) {
                 <div class="cat-rows">
                   ${data.categories
                     .map(
-                      (cat, i) => `<div class="trow cat-row" style="--i:${i}"><span class="swatch" style="background:${cat.color}${cat.color === "#B9AEFF" || cat.color === "#DDDAF0" ? ";box-shadow:inset 0 0 0 1px rgba(20,18,43,.15)" : ""}"></span><span style="flex:1">${cat.name}</span><span>${formatMoney(cat.amount_minor, cur)}</span><span style="width:48px;text-align:right;font-weight:500;color:#5E5B78;font-size:12.5px">${String(cat.percent).replace(".", ",")}%</span></div>`,
+                      (cat, i) => `<div class="trow cat-row" style="--i:${i}"><span class="swatch" style="background:${cat.color}"></span><span style="flex:1">${cat.name}</span><span>${formatMoney(cat.amount_minor, cur)}</span><span style="width:48px;text-align:right;font-weight:500;color:var(--color-muted);font-size:12.5px">${String(cat.percent).replace(".", ",")}%</span></div>`,
                     )
                     .join("")}
                 </div>`
@@ -175,8 +175,8 @@ function renderDashboard(data) {
                     const ico = ICON_MAP[tx.category_icon] || (plus ? "income" : "bag");
                     const sign = plus ? "+" : "−";
                     return `<div class="trow op-row" style="--i:${i}">
-                      <div class="op-main"><span class="op-ico ${plus ? "income" : ""}">${icon(ico)}</span><span><span style="display:block;font-size:15px;font-weight:600">${tx.title}</span><span style="display:block;font-size:12.5px;font-weight:500;color:#5E5B78">${tx.account_name}</span></span></div>
-                      <span style="font-size:14px;font-weight:500;color:#5E5B78">${formatDayShort(tx.occurred_on)}</span>
+                      <div class="op-main"><span class="op-ico ${plus ? "income" : ""}">${icon(ico)}</span><span><span style="display:block;font-size:15px;font-weight:600">${tx.title}</span><span style="display:block;font-size:12.5px;font-weight:500;color:var(--color-muted)">${tx.account_name}</span></span></div>
+                      <span style="font-size:14px;font-weight:500;color:var(--color-muted)">${formatDayShort(tx.occurred_on)}</span>
                       <span><span class="pill ${plus ? "income" : ""}">${plus ? "Доход" : tx.category_name || "—"}</span></span>
                       <span class="amt ${plus ? "plus" : ""}">${sign}${formatMoney(tx.amount_minor, cur)}</span>
                     </div>`;
@@ -195,20 +195,20 @@ function renderDashboard(data) {
                     <span class="kpi-foot">из ${formatMoney(data.budget.limit_minor, cur)}</span>
                   </div>
                   <div class="bar"><span class="fw" style="--i:0;--w:${Math.min(data.budget.percent, 100)}%;width:${Math.min(data.budget.percent, 100)}%"></span></div>
-                  <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-top:8px"><span style="color:#5E5B78">Остаток ${formatMoney(data.budget.remaining_minor, cur)}</span><span>${data.budget.percent}%</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-top:8px"><span style="color:var(--color-muted)">Остаток ${formatMoney(data.budget.remaining_minor, cur)}</span><span>${data.budget.percent}%</span></div>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:12px">
                   ${data.budget.items
                     .slice(0, 2)
                     .map(
                       (item, i) => `<div>
-                        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>${item.name}</span><span style="font-weight:500;font-size:13px;color:#5E5B78">${formatCompact(item.spent_minor)} / ${formatMoney(item.limit_minor, cur)}</span></div>
-                        <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><div class="mini-bar"><span class="fw" style="--i:${i + 1};--w:${Math.min(item.percent, 100)}%;width:${Math.min(item.percent, 100)}%"></span></div><span style="font-size:12.5px;font-weight:600;color:#5E5B78;width:34px;text-align:right">${item.percent}%</span></div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>${item.name}</span><span style="font-weight:500;font-size:13px;color:var(--color-muted)">${formatCompact(item.spent_minor)} / ${formatMoney(item.limit_minor, cur)}</span></div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><div class="mini-bar"><span class="fw" style="--i:${i + 1};--w:${Math.min(item.percent, 100)}%;width:${Math.min(item.percent, 100)}%"></span></div><span style="font-size:12.5px;font-weight:600;color:var(--color-muted);width:34px;text-align:right">${item.percent}%</span></div>
                       </div>`,
                     )
                     .join("")}
                 </div>
-                <div class="tip-box"><span style="width:30px;height:30px;border-radius:50%;background:#B9AEFF;display:flex;align-items:center;justify-content:center;flex:none">${icon("idea")}</span><span>${formatMoney(data.budget.daily_allowance_minor, cur)} в день до конца месяца, чтобы остаться в рамках бюджета.</span></div>`
+                <div class="tip-box"><span style="width:30px;height:30px;border-radius:50%;background:var(--color-lavender);display:flex;align-items:center;justify-content:center;flex:none">${icon("idea")}</span><span>${formatMoney(data.budget.daily_allowance_minor, cur)} в день до конца месяца, чтобы остаться в рамках бюджета.</span></div>`
               : emptyState("Бюджет не задан", "Укажите лимит на месяц в разделе «Бюджеты».")
           }
         </section>

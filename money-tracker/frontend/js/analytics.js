@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatMoney, monthTitle, symbol } from "./format.js";
-import { icon } from "./icons.js";
-import { bootShell, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=2";
 
 const MONTHS = [
   "Январь",
@@ -66,7 +66,7 @@ function escapeHtml(value) {
 }
 
 function safeColor(value) {
-  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "#6D5DFB";
+  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "var(--color-purple)";
 }
 
 function amountByType(items, type) {
@@ -97,7 +97,7 @@ function expensesPerCategory(items) {
   for (const tx of items) {
     if (tx.type !== "expense") continue;
     const name = tx.category_name || "Без категории";
-    const current = result.get(name) || { amount: 0, color: tx.category_color || "#6D5DFB" };
+    const current = result.get(name) || { amount: 0, color: tx.category_color || "var(--color-purple)" };
     current.amount += tx.amount_minor;
     result.set(name, current);
   }
@@ -215,7 +215,7 @@ function renderCalendar() {
     const isSelected = day === selectedDay;
     cells.push(`
       <button class="analytics-calendar-day ${amount ? "has-expense" : ""} ${isSelected ? "selected" : ""}" type="button"
-        data-calendar-day="${day}" style="--heat:${intensity}" aria-label="${day} ${MONTHS[month - 1]}, ${formatMoney(amount, currency)}"
+        data-calendar-day="${day}" style="--heat:${Math.round(intensity * 100)}%" aria-label="${day} ${MONTHS[month - 1]}, ${formatMoney(amount, currency)}"
         ${amount ? `title="${formatMoney(amount, currency)}"` : ""}>${day}</button>`);
   }
 
@@ -241,7 +241,7 @@ function renderComparisons() {
       name,
       current: current.get(name)?.amount || 0,
       previous: previous.get(name)?.amount || 0,
-      color: current.get(name)?.color || previous.get(name)?.color || "#6D5DFB",
+      color: current.get(name)?.color || previous.get(name)?.color || "var(--color-purple)",
     }))
     .sort((a, b) => b.current - a.current)
     .slice(0, 5);

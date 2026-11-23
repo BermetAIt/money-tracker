@@ -46,7 +46,7 @@
 }
 
 .accounts-total-card {
-  background: linear-gradient(115deg, #ffffff, #f4f1ff);
+  background: linear-gradient(115deg, var(--color-card), var(--color-panel));
 }
 
 .accounts-total-heading {
@@ -64,7 +64,7 @@
   height: 25px;
   place-items: center;
   border-radius: 8px;
-  background: #eeecff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
 }
 
@@ -88,8 +88,8 @@
   margin-top: 5px;
   padding: 4px 8px;
   border-radius: 9px;
-  background: #e5f5ef;
-  color: #16805e;
+  background: var(--color-income-surface);
+  color: var(--color-income);
   font-size: 9px;
   font-weight: 700;
 }
@@ -116,13 +116,13 @@
 
 .accounts-distribution-bar > span:not(.accounts-bar-empty) {
   min-width: 2px;
-  border-right: 2px solid white;
+  border-right: 2px solid var(--color-card);
   background: var(--account-color);
 }
 
 .accounts-bar-empty {
   width: 100%;
-  background: repeating-linear-gradient(135deg, #f0eefb, #f0eefb 6px, #e7e4f6 6px, #e7e4f6 12px);
+  background: var(--color-account-empty-track);
 }
 
 .accounts-legend {
@@ -189,10 +189,10 @@
   justify-content: space-between;
   overflow: hidden;
   padding: 14px 13px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.58);
+  border: 1px solid color-mix(in srgb, var(--color-on-inverse) 58%, transparent);
   border-radius: 19px;
   background: var(--account-card-color);
-  color: #ffffff;
+  color: var(--color-on-inverse);
   text-align: left;
   transition: transform 0.2s, box-shadow 0.2s, outline-color 0.2s;
 }
@@ -203,7 +203,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-account-card-overlay);
   content: "";
   pointer-events: none;
 }
@@ -218,32 +218,32 @@
   bottom: -106px;
   width: 170px;
   height: 170px;
-  background: rgba(18, 15, 58, 0.12);
+  background: var(--color-account-card-decoration);
 }
 
 .account-card:hover {
   z-index: 1;
   transform: translateY(-2px);
-  box-shadow: 0 14px 26px rgba(42, 36, 110, 0.22);
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--color-purple-deep) 22%, transparent);
 }
 
 .account-card.selected {
-  outline: 2px solid #ffffff;
-  box-shadow: 0 0 0 3px #6556e8, 0 12px 24px rgba(42, 36, 110, 0.18);
+  outline: 2px solid var(--color-on-inverse);
+  box-shadow: 0 0 0 3px var(--color-purple), 0 12px 24px color-mix(in srgb, var(--color-purple-deep) 18%, transparent);
 }
 
 .account-card.cash {
-  background: linear-gradient(140deg, #b7aaff, #9380ff);
-  color: #231d59;
+  background: var(--color-account-cash-bg);
+  color: var(--color-account-cash-text);
 }
 
 .account-card.deposit {
-  background: linear-gradient(140deg, #7764ff, #513be2);
+  background: var(--color-account-deposit-bg);
 }
 
 .account-card.savings {
-  background: linear-gradient(140deg, #dddaf4, #c5c0e7);
-  color: #232044;
+  background: var(--color-account-savings-bg);
+  color: var(--color-account-savings-text);
 }
 
 .account-card-top,
@@ -266,7 +266,7 @@
   flex: none;
   place-items: center;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--color-account-card-icon);
 }
 
 .account-card-icon svg {
@@ -288,7 +288,7 @@
   margin-left: auto;
   padding: 4px 7px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--color-account-card-icon);
   font-size: 8px;
   font-weight: 600;
 }
@@ -322,9 +322,9 @@
   align-items: center;
   gap: 10px;
   padding: 9px 13px;
-  border: 1px dashed #c9c2f0;
+  border: 1px dashed var(--color-line);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.3);
+  background: color-mix(in srgb, var(--color-card) 30%, transparent);
   color: var(--color-purple-deep);
   text-align: left;
 }
@@ -336,7 +336,7 @@
   flex: none;
   place-items: center;
   border-radius: 50%;
-  background: #efecff;
+  background: var(--color-soft);
 }
 
 .account-add-card > span svg {
@@ -377,12 +377,12 @@
   flex: none;
   place-items: center;
   border-radius: 10px;
-  background: #efecff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
 }
 
 .account-details-icon.cash {
-  background: #f0edff;
+  background: var(--color-soft);
 }
 
 .account-details-head strong,
@@ -416,11 +416,11 @@
 .account-details-stats > div {
   padding: 8px 9px;
   border-radius: 10px;
-  background: #f0edff;
+  background: var(--color-soft);
 }
 
 .account-details-stats > div:first-child {
-  background: #e1f5ee;
+  background: var(--color-income-surface);
 }
 
 .account-details-stats small,
@@ -491,7 +491,7 @@
   align-items: center;
   gap: 7px;
   padding: 7px 0;
-  border-top: 1px solid rgba(20, 18, 43, 0.06);
+  border-top: 1px solid var(--color-line);
 }
 
 .account-transaction-icon {
@@ -500,7 +500,7 @@
   height: 24px;
   place-items: center;
   border-radius: 8px;
-  background: #efecff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
 }
 
@@ -510,8 +510,8 @@
 }
 
 .account-transaction-icon.in {
-  background: #e1f5ee;
-  color: #16805e;
+  background: var(--color-income-surface);
+  color: var(--color-income);
 }
 
 .account-transaction-copy {
@@ -543,7 +543,7 @@
 }
 
 .account-transaction-amount.in {
-  color: #16805e;
+  color: var(--color-income);
 }
 
 .account-transactions-empty,
@@ -575,7 +575,7 @@
   height: 42px;
   place-items: center;
   border-radius: 14px;
-  background: #efecff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
 }
 
@@ -629,7 +629,7 @@
   place-items: center;
   overflow-y: auto;
   padding: 18px;
-  background: rgba(20, 18, 43, 0.42);
+  background: var(--color-overlay);
 }
 
 .account-modal {
@@ -637,9 +637,9 @@
   max-height: min(90vh, 720px);
   overflow: auto;
   padding: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--color-line);
   border-radius: 23px;
-  background: #ffffff;
+  background: var(--color-card);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -668,10 +668,10 @@
   width: 100%;
   min-height: 43px;
   padding: 0 11px;
-  border: 1px solid #e2def5;
+  border: 1px solid var(--color-line);
   border-radius: 11px;
   outline: none;
-  background: #ffffff;
+  background: var(--color-panel);
   color: var(--color-text);
   font: inherit;
   font-size: 13px;
@@ -680,13 +680,13 @@
 .account-form-field input:focus,
 .account-form-field select:focus {
   border-color: var(--color-purple);
-  box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 12%, transparent);
 }
 
 .account-form-error {
   min-height: 16px;
   margin: 9px 0 0;
-  color: #a53636;
+  color: var(--color-error-accent);
   font-size: 11px;
 }
 
@@ -712,8 +712,8 @@
 .accounts-error {
   padding: 14px;
   border-radius: 14px;
-  background: #fff1f1;
-  color: #9b3030;
+  background: var(--color-danger-surface);
+  color: var(--color-danger-text);
   font-size: 12px;
 }
 

@@ -29,9 +29,9 @@
   align-items: center;
   gap: 8px;
   padding: 0 12px;
-  border: 1px solid rgba(20, 18, 43, 0.09);
+  border: 1px solid var(--color-line);
   border-radius: 14px;
-  background: #ffffff;
+  background: var(--color-card);
   color: var(--color-text);
 }
 
@@ -94,11 +94,11 @@
 }
 
 .budget-gauge-track {
-  stroke: #ebe9f7;
+  stroke: var(--color-track);
 }
 
 .budget-gauge-progress {
-  stroke: #7664ff;
+  stroke: var(--color-budget-progress);
   transition: stroke-dashoffset 0.45s ease;
 }
 
@@ -177,7 +177,7 @@
   flex: none;
   place-items: center;
   border-radius: 8px;
-  background: #efecff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
 }
 
@@ -259,13 +259,13 @@
 
 .budget-distribution-track > span:not(.budget-distribution-empty) {
   min-width: 2px;
-  border-right: 2px solid #ffffff;
+  border-right: 2px solid var(--color-card);
   background: var(--budget-color);
 }
 
 .budget-distribution-empty {
   width: 100%;
-  background: repeating-linear-gradient(135deg, #f0eefb, #f0eefb 6px, #e7e4f6 6px, #e7e4f6 12px);
+  background: var(--color-budget-empty-track);
 }
 
 .budget-distribution-legend {
@@ -298,7 +298,7 @@
   gap: 8px;
   padding: 7px 10px;
   border-radius: 10px;
-  background: #f0edff;
+  background: var(--color-soft);
   color: var(--color-purple-deep);
   font-size: 10px;
   font-weight: 600;
@@ -337,7 +337,7 @@
   flex: none;
   place-items: center;
   border-radius: 10px;
-  background: color-mix(in srgb, var(--category-color) 14%, white);
+  background: color-mix(in srgb, var(--category-color) 14%, var(--color-card));
   color: var(--color-purple-deep);
 }
 
@@ -382,9 +382,9 @@
   width: 23px;
   height: 23px;
   place-items: center;
-  border: 1px solid #e3e0ef;
+  border: 1px solid var(--color-line);
   border-radius: 7px;
-  background: #ffffff;
+  background: var(--color-card);
   color: var(--color-muted);
   font: inherit;
   font-size: 14px;
@@ -429,18 +429,18 @@
 }
 
 .budget-status.ok {
-  background: #e2f5ee;
-  color: #178465;
+  background: var(--color-success-surface);
+  color: var(--color-success-text);
 }
 
 .budget-status.near {
-  background: #fff0d2;
-  color: #946300;
+  background: var(--color-warning-surface);
+  color: var(--color-warning-text);
 }
 
 .budget-status.over {
-  background: #ffe6e5;
-  color: #b73535;
+  background: var(--color-danger-surface);
+  color: var(--color-danger-text);
 }
 
 .budget-progress {
@@ -448,14 +448,14 @@
   margin-top: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: #eeecf8;
+  background: var(--color-track);
 }
 
 .budget-progress > span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--progress-color);
+  background: var(--progress-color, var(--color-purple));
   transition: width 0.4s ease;
 }
 
@@ -490,9 +490,9 @@
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  border: 1px dashed #c9c2f0;
+  border: 1px dashed var(--color-line);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.28);
+  background: color-mix(in srgb, var(--color-card) 28%, transparent);
   color: var(--color-purple-deep);
   text-align: center;
   transition: background 0.2s, border-color 0.2s;
@@ -500,7 +500,7 @@
 
 .budget-add-category:hover {
   border-color: var(--color-purple);
-  background: #ffffff;
+  background: var(--color-card);
 }
 
 .budget-add-category > span {
@@ -509,7 +509,7 @@
   height: 34px;
   place-items: center;
   border-radius: 50%;
-  background: #efecff;
+  background: var(--color-soft);
 }
 
 .budget-add-category > span svg {
@@ -541,7 +541,7 @@
   display: grid;
   place-items: center;
   padding: 18px;
-  background: rgba(20, 18, 43, 0.42);
+  background: var(--color-overlay);
 }
 
 .budget-modal {
@@ -549,9 +549,9 @@
   max-height: min(90vh, 720px);
   overflow: auto;
   padding: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--color-line);
   border-radius: 25px;
-  background: #ffffff;
+  background: var(--color-card);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -580,10 +580,10 @@
   width: 100%;
   min-height: 44px;
   padding: 0 12px;
-  border: 1px solid #e2def5;
+  border: 1px solid var(--color-line);
   border-radius: 12px;
   outline: none;
-  background: #ffffff;
+  background: var(--color-panel);
   color: var(--color-text);
   font: inherit;
   font-size: 14px;
@@ -592,13 +592,13 @@
 .budget-form-field input:focus,
 .budget-form-field select:focus {
   border-color: var(--color-purple);
-  box-shadow: 0 0 0 3px rgba(109, 93, 251, 0.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 12%, transparent);
 }
 
 .budget-form-error {
   min-height: 18px;
   margin: 10px 0 0;
-  color: #a53636;
+  color: var(--color-error-accent);
   font-size: 12px;
 }
 
@@ -612,8 +612,8 @@
 .budgets-error {
   padding: 16px;
   border-radius: 16px;
-  background: #fff1f1;
-  color: #9b3030;
+  background: var(--color-danger-surface);
+  color: var(--color-danger-text);
   font-size: 13px;
 }
 

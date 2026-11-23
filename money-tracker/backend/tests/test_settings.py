@@ -32,6 +32,15 @@ def test_settings_are_saved_for_the_user(client: TestClient) -> None:
     }
 
 
+def test_settings_default_to_light_theme(client: TestClient) -> None:
+    headers = auth_headers(client)
+
+    response = client.get("/api/settings", headers=headers)
+
+    assert response.status_code == 200
+    assert response.json()["theme"] == "light"
+
+
 def test_profile_can_be_updated(client: TestClient) -> None:
     headers = auth_headers(client)
 

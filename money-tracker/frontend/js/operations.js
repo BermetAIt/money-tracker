@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatMoney, monthTitle, symbol } from "./format.js";
-import { icon } from "./icons.js";
-import { bootShell, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=2";
 
 const PAGE_SIZE = 10;
 const MONTH_NAMES = [
@@ -36,7 +36,7 @@ function escapeHtml(value) {
 }
 
 function safeColor(value) {
-  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "#6D5DFB";
+  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "var(--color-purple)";
 }
 
 function currentMonth() {
@@ -146,7 +146,7 @@ function renderSummary(items) {
   for (const tx of items) {
     if (tx.type === "expense") {
       const key = tx.category_name || "Без категории";
-      const entry = expensesByCategory.get(key) || { amount: 0, color: tx.category_color || "#6D5DFB" };
+      const entry = expensesByCategory.get(key) || { amount: 0, color: tx.category_color || "var(--color-purple)" };
       entry.amount += tx.amount_minor;
       expensesByCategory.set(key, entry);
     }

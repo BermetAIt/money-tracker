@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatMoney, monthTitle, symbol } from "./format.js";
-import { icon } from "./icons.js";
-import { bootShell, pageRoot } from "./layout.js";
+import { icon } from "./icons.js?v=2";
+import { bootShell, pageRoot } from "./layout.js?v=2";
 
 const QUICK_ADJUSTMENT_MINOR = 100_000;
 const CATEGORY_ICONS = {
@@ -37,7 +37,7 @@ function escapeHtml(value) {
 }
 
 function safeColor(value) {
-  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "#6D5DFB";
+  return /^#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value || "") ? value : "var(--color-purple)";
 }
 
 function overallBudget() {
@@ -171,7 +171,7 @@ function renderBudgetCard(budget) {
         <span class="budget-status ${status.key}">${status.label}</span>
       </div>
       <div class="budget-progress" role="progressbar" aria-label="${escapeHtml(name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.min(percent, 100)}">
-        <span style="width:${barWidth}%;--progress-color:${status.key === "over" ? "#e5484d" : status.key === "near" ? "#d89b00" : color}"></span>
+        <span style="width:${barWidth}%;--progress-color:${status.key === "over" ? "var(--color-budget-progress-over)" : status.key === "near" ? "var(--color-budget-progress-near)" : color}"></span>
       </div>
       <div class="budget-category-foot"><strong>${percent}%</strong><span>${remaining ? `Осталось ${formatMoney(remaining, currency)} · ${dailyText}` : "Лимит исчерпан"}</span></div>
     </article>`;

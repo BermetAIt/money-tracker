@@ -42,7 +42,7 @@ class UserSettings(Base):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     currency: Mapped[str] = mapped_column(String(3), default="KGS")
-    theme: Mapped[str] = mapped_column(String(16), default="system")
+    theme: Mapped[str] = mapped_column(String(16), default="light")
     accent_color: Mapped[str] = mapped_column(String(16), default="#6D5DFB")
     date_format: Mapped[str] = mapped_column(String(16), default="dmmm")
     notifications_email: Mapped[bool] = mapped_column(Boolean, default=True)
