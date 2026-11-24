@@ -1,4 +1,4 @@
-import { bootShell, emptyState, pageRoot } from "./layout.js?v=3";
+import { bootShell, emptyState, pageRoot } from "./layout.js?v=4";
 
 const meta = {
   ops: { title: "Операции", text: "Здесь появятся доходы и расходы с поиском и фильтрами." },

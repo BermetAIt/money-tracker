@@ -52,7 +52,9 @@ function renderShell(pageId, me) {
   const page = [...NAV, { id: "set", crumb: "Настройки" }, { id: "help", crumb: "Помощь" }, { id: "profile", crumb: "Профиль" }].find(
     (item) => item.id === pageId,
   );
-  const index = Math.max(0, NAV.findIndex((item) => item.id === pageId));
+  const activeNavIndex = NAV.findIndex((item) => item.id === pageId);
+  const isNavPage = activeNavIndex !== -1;
+  const index = Math.max(0, activeNavIndex);
   const navY = index * 52;
   document.body.innerHTML = `
     <div class="shell">
@@ -68,7 +70,7 @@ function renderShell(pageId, me) {
         </button>
         <div class="nav-label">ВАШИ ФИНАНСЫ</div>
         <nav class="nav-wrap" aria-label="Разделы">
-          <span class="navpill" style="transform:translateY(${pageId && NAV.some((n) => n.id === pageId) ? navY : -80}px)"></span>
+          ${isNavPage ? `<span class="navpill" style="transform:translateY(${navY}px)"></span>` : ""}
           ${NAV.map((item) => `
             <a class="nav ${item.id === pageId ? "on" : ""}" href="${item.href}" ${item.id === pageId ? 'aria-current="page"' : ""}>
               ${icon(item.icon)}${item.label}${item.badge ? `<span class="nbadge">${item.badge}</span>` : ""}

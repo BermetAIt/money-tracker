@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatMoney, monthTitle, symbol } from "./format.js";
 import { icon } from "./icons.js?v=2";
-import { bootShell, pageRoot } from "./layout.js?v=3";
+import { bootShell, pageRoot } from "./layout.js?v=4";
 
 const SUGGESTIONS = [
   "Где можно сэкономить?",

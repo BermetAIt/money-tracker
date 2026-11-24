@@ -1,5 +1,5 @@
 import { icon } from "./icons.js?v=2";
-import { bootShell, pageRoot } from "./layout.js?v=3";
+import { bootShell, pageRoot } from "./layout.js?v=4";
 
 const FAQS = [
   {

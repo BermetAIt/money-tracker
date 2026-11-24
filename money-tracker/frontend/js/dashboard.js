@@ -1,7 +1,7 @@
 import { apiJson } from "./api.js";
 import { formatCompact, formatDayShort, formatMoney, monthTitle, symbol } from "./format.js";
 import { icon } from "./icons.js?v=2";
-import { bootShell, emptyState, pageRoot } from "./layout.js?v=3";
+import { bootShell, emptyState, pageRoot } from "./layout.js?v=4";
 
 const ICON_MAP = { bag: "bag", cafe: "cafe", car: "car", loop: "loop", home: "house", income: "income" };
 
